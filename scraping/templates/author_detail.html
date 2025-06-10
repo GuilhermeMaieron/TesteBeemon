@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="author-card">
+        <h1>{{ author.name }}</h1>
+        {% if author.born %}
+            <p><strong>Nascido:</strong> {{ author.born }}</p>
+        {% endif %}
+        {% if author.description %}
+            <p>{{ author.description }}</p>
+        {% else %}
+            <p>Nenhuma descrição disponível.</p>
+        {% endif %}
+    </div>
+
+    <h2>Frases por {{ author.name }}</h2>
+
+    {% if quotes %}
+        {% for quote in quotes %}
+            <div class="quote-card">
+                <blockquote>"{{ quote.text }}"</blockquote>
+                <div class="quote-tags">
+                    {% for tag in quote.tags.all %}
+                        <span>{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Esse autor não tem frases.</p>
+    {% endif %}
+{% endblock %}

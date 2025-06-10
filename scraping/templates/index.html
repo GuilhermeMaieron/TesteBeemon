@@ -1,12 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <link href="style.css" rel="stylesheet" />
-</head>
-<body>
+{% extends "main.html" %}
 
-    HELLO EVERYNYAN
-</body>
-</html>
+{% block content %}
+    <div class="fw-bold pb-4 pt-2">
+        {{ quotes_count }} frases cadastradas. (A aplicação não cadastra frases com textos iguais mais de uma vez)
+    </div>
+    <form method="post" >
+        {% csrf_token %}
+        <label for="page" class="form-label">Número da página para fazer scrape:</label>
+        <input type="number" class="form-control" id="page" name="page" min="1" required>
+        <button type="submit" class="btn btn-success mt-2">Scrape</button> 
+    </form>
+
+    <div class="my-4 border-bottom pb-3">
+        <div class="quote-tags d-flex flex-wrap gap-2">
+            {% for tag in tags %}
+                <span><a class="tag-href" href="{% url 'home_view' %}?tag={{tag.name}}">{{ tag.name }}</a></span>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% for quote in quotes %}
+        <div class="quote-card">
+            <div class="quote-text">"{{ quote.text }}"</div>
+            <a class="quote-author" href="{% url 'author_detail' quote.author.name %}">— {{ quote.author.name }}</a>
+            <div class="quote-tags">
+                {% for tag in quote.tags.all %}
+                    <span><a class="tag-href" href="{% url 'home_view' %}?tag={{tag.name}}">{{ tag.name }}</a></span>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p>Não foram encontradas frases.</p>
+    {% endfor %}
+{% endblock %}
